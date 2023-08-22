@@ -44,9 +44,26 @@ Count() review
 penguins %>% 
   group_by(species, island, sex) %>% summarize(sample_size = n())
 
-penguins %>% count(sepcies,island,sex)
+penguins %>% count(species,island,sex)
 
 #This is how to do the same thing two ways. Group_by and summarize and n() are included in Count() to get counts of observations.
 ```
 
 ## new stuff
+
+```{r}
+animals <- data.frame(
+  stringsAsFactors = FALSE,
+          location = c("lagoon", "bluff", "creek", "oaks", "bluff"),
+           species = c("bobcat", "coyote", "fox", "squirrel", "bobcat"),
+          maturity = c("adult", "juvenile", "adult", "juvenile", "adult")
+)
+
+sites <- data.frame(
+  stringsAsFactors = FALSE,
+          location = c("beach", "lagoon", "bluff", "oaks"),
+    full_site_name = c("Goleta Beach","UCSB Lagoon",
+                       "Ellwood Mesa","Fremont Campground"),
+      jurisdiction = c("SB City", "UCSB", "SB City", "USFS")
+)
+```
