@@ -1,0 +1,52 @@
+---
+title: "day7-comp1"
+format: html
+editor: visual
+---
+
+```{r}
+library(tidyverse)
+library(palmerpenguins)
+```
+
+## Data wrangling refresher
+
+```{r}
+dream_biscoe_penguins <- penguins %>% 
+  filter(island == "Dream" | island == "Biscoe")
+  
+  #or use %in%
+  
+#  dream_biscoe_penguins <- penguins %>% 
+#  filter(island %in% c("Dream", "Biscoe) %>% 
+
+#use select to get rid of columns
+#filter is used for rows
+  
+penguins_subset <- penguins %>% 
+  filter(island %in% c("Dream", "Biscoe")) %>% 
+           select(-year, -sex) %>% 
+           mutate(body_mass_kg = body_mass_g/1000) %>% 
+           rename(location = island)
+```
+
+```{r}
+penguins_subset2 <- penguins %>% 
+  filter(species %in% "Adelie") %>% 
+  filter(!is.na(flipper_length_mm)) %>% 
+  group_by(sex) %>% 
+  summarize(flipper_mean = mean(flipper_length_mm,na.rm = TRUE), flipper_sd = sd(flipper_length_mm, na.rm = TRUE))
+```
+
+Count() review
+
+```{r}
+penguins %>% 
+  group_by(species, island, sex) %>% summarize(sample_size = n())
+
+penguins %>% count(sepcies,island,sex)
+
+#This is how to do the same thing two ways. Group_by and summarize and n() are included in Count() to get counts of observations.
+```
+
+## new stuff
