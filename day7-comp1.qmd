@@ -89,3 +89,164 @@ left_join_example <- left_join(animals,sites)
 ```{r}
 inner_join_example <- inner_join(animals, sites)
 ```
+
+## Date-times with lubridate()
+
+ymd: if date is in year-month-day
+
+mdy: if date is in month-day-year
+
+dmy: date-month-year
+
+```{r}
+"03-15-1998"
+
+my_date_1 <- lubridate::mdy("03-15-1998")
+
+my_date_1
+
+class(my_date_1)
+
+my_date_2 <- lubridate::mdy("11/7/2003")
+
+my_date_3 <- lubridate::dmy("08-Jun-1974")
+
+my_date_4 <- lubridate::ymd("19740205") # if its a pure number with no letters or dashes, it doesn't need to be a string
+```
+
+can we break the lubridate parsing functions? yes...
+
+```{r}
+my_date_5 <- lubridate::dmy("06-20-2001") #if you give wrong lubridate function
+```
+
+Adding times to our dates
+
+```{r}
+time_1 <- lubridate::ymd_hm("2020-08-12 11:18")
+time_1
+```
+
+Parse June 2, 1982 as 4 pm UTC (16:00) as a date in R.
+
+```{r}
+date_6 <- lubridate::mdy("June 2, 1982")
+
+date_6
+
+time_2 <- lubridate::mdy_hm("June 2, 1982 16:00")
+#new update: date_time_6 <- lubridate::mdy_hm("June 2, 1982 4:00 PM") works as well
+date_time_6
+```
+
+```{r}
+lubridate::with_tz(time_2, "America/Los_Angeles")
+
+lubridate::with_tz(time_2, "America/Chicago")
+
+lubridate::with_tz(time_2, "America/New_York")
+```
+
+Sys.time() will show current time in your timezone
+
+```{r}
+now<- with_tz(Sys.time(), "Europe/Belgrade")
+now
+```
+
+Access different parts of date-times
+
+```{r}
+lubridate::day(now)
+```
+
+```{r}
+lubridate::week(now)
+```
+
+```{r}
+lubridate::week("11/07/1997")
+```
+
+```{r}
+urchin_counts <- data.frame(
+  date = c("Oct 12, 2004", "October 18, 2007", "Feb 12, 2003", "Feb 14, 2008"),
+  species = c("purple", "red", "red", "red"),
+  size_mm = c(19,24,18,11)
+)
+```
+
+```{r}
+urchin_mean_by_month <- urchin_counts %>% 
+  mutate(date = lubridate::mdy(date)) %>% 
+  mutate(month = lubridate::month(date)) %>% 
+  group_by(month) %>% 
+  summarize(mean_size = mean(size_mm))
+#mutate(date = lubridate::mdy(date)) this overwrites existing date column because it is named the same, so that all dates have same format
+#mutate(month = lubridate::month(date)) this creates new column named month
+
+  # group_by(month) %>% 
+  # summarize(mean_size = mean(size_mm))
+#this groups by month and finds the mean for each month, there are two observations for the two months therefore it combines the data for each month.
+```
+
+## Strings with stringr
+
+```{r}
+my_string <- "Homer loves salmon and kibble and toys"
+```
+
+```{r}
+str_detect(my_string, pattern = "kibble")
+```
+
+```{r}
+str_detect(my_string, pattern = "hot weather")
+```
+
+```{r}
+my_string_2 <- c("burrito", "fish taco", "taco salad", "super burrito")
+```
+
+```{r}
+str_detect(my_string_2, pattern = "taco")
+```
+
+```{r}
+starwars %>% 
+  filter(str_detect(name, pattern = "Skywalker"))
+```
+
+```{r}
+starwars %>% 
+  mutate(name_new = str_replace(name, pattern = "Sky", replacement = "Fire"))
+```
+
+str_trim() to get rid of leading and trailing whitespace
+
+str_squish() to get rid of leading and trailing whitespace AND excess interior whitespace
+
+```{r}
+my_string_3 <- "      Hi my name   is   Homer !!!      "
+
+str_trim(my_string_3)
+
+str_squish(my_string_3)
+```
+
+## Case Conversions
+
+```{r}
+str_to_lower(my_string_3)
+
+str_to_upper(my_string_3)
+
+str_to_title(my_string_3)
+
+str_to_sentence(my_string_3)
+```
+
+```{r}
+starwars %>% 
+  mutate(species_lower = str_to_lower(species))
+```
